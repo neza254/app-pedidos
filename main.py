@@ -52,6 +52,7 @@ def agregar():
     pedidos = cargar()
     pedidos.append(pedido)
     guardar(pedidos)
+
     return redirect("/")
 
 @app.route("/borrar/<int:indice>", methods=["POST"])
@@ -62,5 +63,32 @@ def borrar(indice):
         guardar(pedidos)
     return redirect("/")
 
+@app.route("/agregar-producto/<int:indice>", methods=["POST"])
+def agregar_producto(indice):
+    pedidos = cargar()
+
+    if 0 <= indice < len(pedidos):
+        producto = request.form["producto"]
+        cantidad = request.form["cantidad"]
+        precio = request.form["precio"]
+
+        if producto and cantidad.isdigit() and precio:
+            cantidad = int(cantidad)
+            precio = float(precio)
+            total = cantidad * precio
+
+            nuevo = {
+                "producto": producto,
+                "cantidad": cantidad,
+                "precio": precio,
+                "total": total
+            }
+
+            pedidos[indice]["productos"].append(nuevo)
+            pedidos[indice]["total"] += total
+            guardar(pedidos)
+
+    return redirect("/")
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=81)
+    app.run(host="0.0.0.0", port=8080)
