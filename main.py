@@ -91,4 +91,5 @@ def agregar_producto(indice):
     return redirect("/")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    port = int(os.environ.get("PORT", 8080))  # ← Railway usa esta variable
+    app.run(host="0.0.0.0", port=port)
